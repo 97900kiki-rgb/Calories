@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NutriWrist AI — 손목 위의 AI 영양 분석</title>
+<meta name="description" content="스마트워치 카메라로 음식 사진 한 장을 찍으면 AI가 칼로리·영양소·알레르기를 분석하고 맞춤 운동까지 제안합니다." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⌚</text></svg>" />
+</head>
+<body>
+<a class="skip-link" href="#analyze">본문으로 바로가기</a>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark"><i class="fa-solid fa-stopwatch" aria-hidden="true"></i></span>
+      <span class="brand-text">NutriWrist<span class="brand-ai">AI</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="주요 메뉴">
+      <a href="#how">작동 방식</a>
+      <a href="#analyze">AI 분석</a>
+      <a href="#track">칼로리 추적</a>
+      <a href="#workout">운동 제안</a>
+      <a href="#eat">저칼로리 맛집</a>
+      <a href="#goal">건강 목표</a>
+      <a href="#tech">기술 구조</a>
+    </nav>
+    <div class="header-actions">
+      <span class="today-pill" id="today-pill" title="오늘 날짜">—</span>
+      <button class="btn btn-ghost nav-toggle" id="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="dot"></span> 웨어러블 헬스케어 · 온디바이스 AI</p>
+        <h1>스마트워치 <span class="grad">AI 영양 분석</span> 기능</h1>
+        <p class="lede">
+          손목 위의 AI가 당신의 식사를 분석하고, 더 건강한 삶으로 안내합니다.
+          음식 사진 한 장이면 칼로리·영양소·알레르기까지 즉시 확인할 수 있습니다.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#analyze"><i class="fa-solid fa-camera-retro" aria-hidden="true"></i> 지금 음식 분석하기</a>
+          <a class="btn btn-outline" href="#how"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> 작동 방식 보기</a>
+        </div>
+        <dl class="hero-stats">
+          <div><dt>분석 시간</dt><dd><span data-count="1.2" data-decimals="1">0</span>초</dd></div>
+          <div><dt>음식 인식률</dt><dd><span data-count="94.6" data-decimals="1">0</span>%</dd></div>
+          <div><dt>등록 음식 DB</dt><dd><span data-count="12480">0</span>종</dd></div>
+          <div><dt>배터리 영향</dt><dd><span data-count="3" >0</span>%</dd></div>
+        </dl>
+      </div>
+
+      <div class="hero-visual">
+        <div class="watch">
+          <div class="watch-strap top" aria-hidden="true"></div>
+          <div class="watch-body">
+            <div class="watch-crown" aria-hidden="true"></div>
+            <div class="watch-screen">
+              <div class="ws-status">
+                <span>09:41</span>
+                <span class="ws-icons"><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-three-quarters"></i></span>
+              </div>
+              <p class="ws-label">오늘의 섭취</p>
+              <p class="ws-kcal" id="watch-kcal">0 <small>/ <span id="watch-goal">2,000</span> kcal</small></p>
+              <div class="ws-ring-wrap">
+                <svg class="ws-ring" viewBox="0 0 120 120" role="img" aria-label="목표 칼로리 진행률">
+                  <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                  <circle class="ring-fg" id="watch-ring" cx="60" cy="60" r="52"></circle>
+                </svg>
+                <div class="ws-ring-center">
+                  <strong id="watch-pct">0%</strong>
+                  <span>달성</span>
+                </div>
+              </div>
+              <div class="ws-macros">
+                <span class="m-carb">탄 <b id="watch-carb">0</b>g</span>
+                <span class="m-pro">단 <b id="watch-pro">0</b>g</span>
+                <span class="m-fat">지 <b id="watch-fat">0</b>g</span>
+              </div>
+            </div>
+          </div>
+          <div class="watch-strap bottom" aria-hidden="true"></div>
+        </div>
+        <div class="float-chip chip-1"><i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i> <span id="chip-kcal">0 kcal</span> 감지</div>
+        <div class="float-chip chip-2"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i> 알레르기 스캔 완료</div>
+        <div class="float-chip chip-3"><i class="fa-solid fa-person-running" aria-hidden="true"></i> 운동 제안 준비</div>
+      </div>
+    </div>
+
+    <div class="wrap credit-bar">
+      <span><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> 개발자 · 박서현</span>
+      <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> 2026.09.22</span>
+      <span><i class="fa-solid fa-microchip" aria-hidden="true"></i> Edge NPU + Vision Transformer</span>
+    </div>
+  </section>
+
+  <!-- ===================== HOW IT WORKS ===================== -->
+  <section class="section" id="how">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="kicker">How it works</p>
+        <h2>음식 사진 한 장으로 시작하세요</h2>
+        <p class="section-sub">촬영 → AI 분석 → 운동 제안까지 3단계. 스마트워치만 있으면 어디서든 10초 안에 끝납니다.</p>
+      </header>
+      <ol class="steps">
+        <li class="step-card reveal">
+          <span class="step-no">01</span>
+          <span class="step-ico"><i class="fa-solid fa-camera" aria-hidden="true"></i></span>
+          <h3>📸 촬영</h3>
+          <p>스마트워치 카메라로 음식 사진을 촬영합니다. 손목을 살짝 들어 한 컷이면 충분합니다.</p>
+        </li>
+        <li class="step-card reveal">
+          <span class="step-no">02</span>
+          <span class="step-ico"><i class="fa-solid fa-robot" aria-hidden="true"></i></span>
+          <h3>🤖 AI 분석</h3>
+          <p>칼로리와 영양 정보를 즉시 분석합니다. 온디바이스 모델이 1.2초 내에 결과를 돌려줍니다.</p>
+        </li>
+        <li class="step-card reveal">
+          <span class="step-no">03</span>
+          <span class="step-ico"><i class="fa-solid fa-person-running" aria-hidden="true"></i></span>
+          <h3>🏃 운동 제안</h3>
+          <p>맞춤 운동 계획을 자동 제안합니다. 섭취량에 맞춰 소요 시간과 소모 칼로리를 계산합니다.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== AI ANALYSIS LAB ===================== -->
+  <section class="section section-tint" id="analyze">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="kicker">AI Food Scanner</p>
+        <h2>AI가 인식하는 정보</h2>
+        <p class="section-sub">아래 음식 중 하나를 골라 <b>분석 시작</b>을 누르거나, 내 사진을 업로드해 보세요. 실제 앱과 같은 분석 과정을 체험할 수 있습니다.</p>
+      </header>
+
+      <div class="lab">
+        <div class="lab-left">
+          <h3 class="lab-title"><i class="fa-solid fa-utensils" aria-hidden="true"></i> 샘플 음식 선택</h3>
+          <div class="food-picker" id="food-picker" role="list"></div>
+
+          <h3 class="lab-title"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> 내 사진 업로드</h3>
+          <label class="upload-zone" id="upload-zone" for="photo-input">
+            <input type="file" id="photo-input" accept="image/*" />
+            <i class="fa-solid fa-image" aria-hidden="true"></i>
+            <span><b>사진 선택</b> 또는 파일을 끌어다 놓기</span>
+            <small id="upload-hint">JPG · PNG · 최대 8MB — 사진은 브라우저 안에서만 사용됩니다</small>
+          </label>
+
+          <button class="btn btn-primary btn-block" id="analyze-btn">
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> 분석 시작
+          </button>
+        </div>
+
+        <div class="lab-right">
+          <div class="scanner" id="scanner">
+            <div class="scanner-media" id="scanner-media">
+              <img id="scan-img" alt="분석 대상 음식 사진" />
+              <div class="scan-line" aria-hidden="true"></div>
+              <div class="scan-grid" aria-hidden="true"></div>
+              <div class="scan-placeholder" id="scan-placeholder">
+                <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                <p>음식을 선택하면<br />여기에서 스캔이 시작됩니다</p>
+              </div>
+            </div>
+            <div class="scan-progress"><span id="scan-bar"></span></div>
+          </div>
+
+          <div class="result" id="result" aria-live="polite">
+            <div class="result-empty" id="result-empty">
+              <i class="fa-solid fa-brain" aria-hidden="true"></i>
+              <p>분석 결과가 이곳에 표시됩니다.</p>
+            </div>
+
+            <div class="result-body" id="result-body" hidden>
+              <header class="result-head">
+                <div>
+                  <p class="result-name" id="r-name">—</p>
+                  <p class="result-conf" id="r-conf">신뢰도 —</p>
+                </div>
+                <span class="result-kcal" id="r-kcal">0<small>kcal</small></span>
+              </header>
+
+              <div class="macro-bars" id="r-macros"></div>
+
+              <div class="nutri-chips" id="r-micro"></div>
+
+              <div class="allergy-box" id="r-allergy"></div>
+
+              <div class="result-actions">
+                <button class="btn btn-primary" id="log-btn"><i class="fa-solid fa-plus" aria-hidden="true"></i> 식단에 기록</button>
+                <button class="btn btn-outline" id="reanalyze-btn"><i class="fa-solid fa-rotate" aria-hidden="true"></i> 다시 분석</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CALORIE TRACKING ===================== -->
+  <section class="section" id="track">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="kicker">Real-time tracking</p>
+        <h2>실시간 칼로리 추적</h2>
+        <p class="section-sub">아침부터 저녁까지 섭취한 칼로리가 실시간으로 누적됩니다. 목표 대비 진행 상황을 시각적으로 확인하고, 식사 시간별 영양 밸런스를 분석하세요.</p>
+      </header>
+
+      <div class="dash">
+        <div class="dash-main">
+          <div class="panel panel-goal">
+            <div class="goal-ring-wrap">
+              <svg class="goal-ring" viewBox="0 0 200 200" role="img" aria-label="일일 칼로리 진행률">
+                <circle class="ring-track" cx="100" cy="100" r="86"></circle>
+                <circle class="ring-value" id="goal-ring-value" cx="100" cy="100" r="86"></circle>
+              </svg>
+              <div class="goal-ring-center">
+                <span class="grc-label">섭취</span>
+                <strong id="dash-kcal">0</strong>
+                <span class="grc-sub">/ <span id="dash-goal">2,000</span> kcal</span>
+                <span class="grc-pct" id="dash-pct">0%</span>
+              </div>
+            </div>
+            <ul class="goal-facts">
+              <li><span class="dot-i c-carb"></span> 탄수화물 <b id="dash-carb">0g</b></li>
+              <li><span class="dot-i c-pro"></span> 단백질 <b id="dash-pro">0g</b></li>
+              <li><span class="dot-i c-fat"></span> 지방 <b id="dash-fat">0g</b></li>
+              <li><span class="dot-i c-remain"></span> 남은 칼로리 <b id="dash-remain">2,000g</b></li>
+            </ul>
+            <p class="dash-note" id="dash-note">기록을 추가하면 실시간으로 업데이트됩니다.</p>
+          </div>
+
+          <div class="panel">
+            <h3 class="panel-title"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> 식사 시간별 영양 밸런스</h3>
+            <div class="chart-box"><canvas id="meal-chart"></canvas></div>
+          </div>
+        </div>
+
+        <aside class="dash-side">
+          <div class="panel">
+            <h3 class="panel-title"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> 오늘의 식사 기록 <span class="badge" id="meal-count">0</span></h3>
+            <ul class="meal-list" id="meal-list"></ul>
+            <div class="list-empty" id="meal-empty">
+              <i class="fa-regular fa-face-smile" aria-hidden="true"></i>
+              <p>아직 기록이 없습니다.<br />AI 분석 결과를 기록해 보세요.</p>
+            </div>
+            <div class="list-tools">
+              <button class="btn btn-ghost btn-sm" id="load-demo-btn"><i class="fa-solid fa-bolt" aria-hidden="true"></i> 예시 데이터 불러오기</button>
+              <button class="btn btn-ghost btn-sm btn-danger" id="clear-btn"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> 전체 삭제</button>
+            </div>
+          </div>
+
+          <div class="panel panel-storage">
+            <h3 class="panel-title"><i class="fa-solid fa-database" aria-hidden="true"></i> 데이터 저장소</h3>
+            <p class="storage-state" id="storage-state"><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> 확인 중…</p>
+            <p class="storage-desc">기록은 테이블 API(<code>tables/meals</code>)에 저장되며, 사용할 수 없을 때는 브라우저 저장소로 자동 전환됩니다.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WORKOUT SUGGESTION ===================== -->
+  <section class="section section-tint" id="workout">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="kicker">Smart workout</p>
+        <h2>맞춤형 운동 제안</h2>
+        <p class="section-sub">섭취한 칼로리에 맞는 운동량을 자동 계산하여 소요 시간과 예상 소모 칼로리를 함께 제공합니다.</p>
+      </header>
+
+      <div class="burn-calc panel">
+        <div class="burn-control">
+          <label for="burn-kcal">소모할 칼로리 (kcal)</label>
+          <div class="burn-input">
+            <input type="range" id="burn-range" min="50" max="900" step="10" value="320" />
+            <input type="number" id="burn-kcal" min="20" max="1500" step="10" value="320" />
+          </div>
+          <p class="burn-hint">오늘 섭취량 <b id="burn-today">0 kcal</b> · 현재 목표까지 <b id="burn-over">0 kcal</b></p>
+        </div>
+        <div class="workout-grid" id="workout-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DAEJEON LOW-CALORIE EATS ===================== -->
+  <section class="section" id="eat">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="kicker">Eat under 600 kcal</p>
+        <h2>대전에서 <span class="grad">600kcal 이하</span>로 먹기 좋은 곳</h2>
+        <p class="section-sub">
+          오늘 기록한 칼로리를 확인했다면, 이제 어디서 먹을지 정할 차례입니다.
+          대전 주요 상권의 <b>저칼로리 메뉴 유형</b>을 지역별로 골라 정리했습니다.
+          카드의 버튼을 누르면 <b>네이버 지도</b>에서 해당 지역의 실제 영업 중인 식당을 바로 확인할 수 있습니다.
+        </p>
+      </header>
+
+      <div class="map-notice">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <div>
+          <strong>네이버 지도 연동 방식 안내</strong>
+          <p>
+            네이버 지도 <b>지도를 페이지에 직접 삽입</b>하려면 Client ID 발급과 도메인 등록이 필요하며,
+            이는 인증 정보라 정적 사이트에 넣을 수 없습니다. 그래서 이 데모는
+            <b>네이버 지도 검색 딥링크</b> 방식으로 연결했습니다. 카드의 버튼을 누르면 새 탭에서 네이버 지도가 열립니다.
+            상호·영업시간·실제 메뉴는 변동이 잦아 지도에서 최신 정보를 확인해 주세요.
+          </p>
+        </div>
+      </div>
+
+      <div class="spot-toolbar">
+        <div class="segmented small" id="spot-filter" role="radiogroup" aria-label="지역 필터"></div>
+        <p class="spot-count" id="spot-count">—</p>
+      </div>
+
+      <div class="spot-grid" id="spot-grid"></div>
+
+      <p class="spot-foot">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        kcal은 해당 <b>메뉴 유형의 일반적 1인분 추정값</b>이며, 실제 매장의 조리법·제공량에 따라 달라집니다.
+        특정 업체를 지정한 추천이 아니므로 방문 전 네이버 지도에서 영업 여부를 확인하세요.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== GOAL ===================== -->
+  <section class="section section-tint" id="goal">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="kicker">Your goal</p>
+        <h2>건강 목표 달성</h2>
+        <p class="section-sub">AI가 개인 목표에 따라 일일 칼로리 목표를 자동으로 조정합니다. 매주 상세한 진행 상황 리포트로 목표에 얼마나 가까워졌는지 확인하세요.</p>
+      </header>
+
+      <div class="goal-grid">
+        <div class="panel goal-form">
+          <h3 class="panel-title"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> 나만의 목표 설정</h3>
+
+          <fieldset class="field">
+            <legend>목표 유형</legend>
+            <div class="segmented" id="goal-type" role="radiogroup" aria-label="목표 유형">
+              <button type="button" class="seg" data-value="lose" role="radio" aria-checked="false"><i class="fa-solid fa-arrow-trend-down"></i> 체중 감량</button>
+              <button type="button" class="seg is-active" data-value="keep" role="radio" aria-checked="true"><i class="fa-solid fa-equals"></i> 체중 유지</button>
+              <button type="button" class="seg" data-value="gain" role="radio" aria-checked="false"><i class="fa-solid fa-arrow-trend-up"></i> 근육 증가</button>
+            </div>
+          </fieldset>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="in-weight">체중 (kg)</label>
+              <input type="number" id="in-weight" min="30" max="200" step="0.5" value="62" />
+            </div>
+            <div class="field">
+              <label for="in-height">신장 (cm)</label>
+              <input type="number" id="in-height" min="120" max="220" step="1" value="168" />
+            </div>
+            <div class="field">
+              <label for="in-age">나이</label>
+              <input type="number" id="in-age" min="12" max="99" step="1" value="27" />
+            </div>
+          </div>
+
+          <fieldset class="field">
+            <legend>성별</legend>
+            <div class="segmented small" id="gender" role="radiogroup" aria-label="성별">
+              <button type="button" class="seg is-active" data-value="male" role="radio" aria-checked="true">남성</button>
+              <button type="button" class="seg" data-value="female" role="radio" aria-checked="false">여성</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="field">
+            <legend>활동 수준</legend>
+            <div class="segmented small" id="activity" role="radiogroup" aria-label="활동 수준">
+              <button type="button" class="seg" data-value="1" role="radio" aria-checked="false">거의 없음</button>
+              <button type="button" class="seg" data-value="2" role="radio" aria-checked="false">가벼움</button>
+              <button type="button" class="seg is-active" data-value="3" role="radio" aria-checked="true">보통</button>
+              <button type="button" class="seg" data-value="4" role="radio" aria-checked="false">활발</button>
+              <button type="button" class="seg" data-value="5" role="radio" aria-checked="false">매우 활발</button>
+            </div>
+          </fieldset>
+
+          <button class="btn btn-primary btn-block" id="goal-save-btn">
+            <i class="fa-solid fa-robot" aria-hidden="true"></i> AI 목표 자동 계산
+          </button>
+
+          <div class="goal-out" id="goal-out">
+            <div class="goal-out-item">
+              <span>기초대사량(BMR)</span><strong id="out-bmr">—</strong>
+            </div>
+            <div class="goal-out-item">
+              <span>유지 칼로리(TDEE)</span><strong id="out-tdee">—</strong>
+            </div>
+            <div class="goal-out-item highlight">
+              <span>권장 일일 섭취</span><strong id="out-target">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> 최근 7일 진행 리포트</h3>
+          <div class="chart-box tall"><canvas id="week-chart"></canvas></div>
+          <ul class="report-list" id="report-list"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TECH ===================== -->
+  <section class="section" id="tech">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="kicker">Architecture</p>
+        <h2>이 웹앱은 이렇게 동작합니다</h2>
+        <p class="section-sub">발표자료의 기능을 브라우저에서 그대로 체험할 수 있도록, 분석 파이프라인을 클라이언트에서 시뮬레이션했습니다.</p>
+      </header>
+      <div class="tech-grid">
+        <article class="tech-card reveal">
+          <i class="fa-solid fa-camera-retro" aria-hidden="true"></i>
+          <h3>1. 입력</h3>
+          <p>샘플 음식 또는 업로드한 사진을 <code>FileReader</code>로 읽어 스캐너 뷰에 렌더링합니다.</p>
+        </article>
+        <article class="tech-card reveal">
+          <i class="fa-solid fa-microchip" aria-hidden="true"></i>
+          <h3>2. 추론 (시뮬레이션)</h3>
+          <p>이미지 해시를 시드로 사용해 재현 가능한 분류 결과를 만들고, 신뢰도·영양소를 산출합니다.</p>
+        </article>
+        <article class="tech-card reveal">
+          <i class="fa-solid fa-database" aria-hidden="true"></i>
+          <h3>3. 저장</h3>
+          <p>RESTful Table API(<code>tables/meals</code>, <code>tables/goals</code>)에 기록하고 로컬 폴백을 유지합니다.</p>
+        </article>
+        <article class="tech-card reveal">
+          <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <h3>4. 시각화</h3>
+          <p>Chart.js와 SVG 링으로 실시간 누적, 식사 밸런스, 주간 리포트를 그립니다.</p>
+        </article>
+      </div>
+      <p class="disclaimer">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        본 페이지는 <b>발표용 데모</b>입니다. 영양 수치는 참고용 추정값이며 의학적 진단이 아닙니다.
+        실제 서비스에서는 온디바이스 NPU 추론과 식약처 영양 DB를 사용합니다.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark small"><i class="fa-solid fa-stopwatch" aria-hidden="true"></i></span>
+      <div>
+        <strong>NutriWrist AI</strong>
+        <p>손목 위의 AI가 당신의 식사를 분석하고, 더 건강한 삶으로 안내합니다.</p>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="바닥글 메뉴">
+      <a href="#how">작동 방식</a>
+      <a href="#analyze">AI 분석</a>
+      <a href="#track">칼로리 추적</a>
+      <a href="#workout">운동 제안</a>
+      <a href="#eat">저칼로리 맛집</a>
+      <a href="#goal">건강 목표</a>
+    </nav>
+    <p class="footer-meta">개발자 박서현 · 2026.09.22 · 스마트워치 AI 영양 분석 기능 발표 자료 기반 데모</p>
+  </div>
+</footer>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="js/foods.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
