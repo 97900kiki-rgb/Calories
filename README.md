@@ -161,7 +161,7 @@ js/app.js           분석 시뮬레이션, 기록 CRUD, 집계, Chart.js 시각
 특정 업체를 지정한 추천이 아닙니다. 실제 매장의 조리법·제공량·영업 여부는 네이버 지도에서 확인하세요.   
 
 <img width="1236" height="833" alt="image" src="https://github.com/user-attachments/assets/60d4ff63-c868-4c64-9539-5c78ab75af60" />   
-진행링크:https://calories.kdt2025.com/   
+실행링크:https://calories.kdt2025.com/   
 저장소:https://github.com/97900kiki-rgb/Calories
 
 
